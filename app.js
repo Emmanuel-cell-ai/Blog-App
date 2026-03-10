@@ -2,12 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 
-const connectDB = require('./database/db');
-const { connect } = require('mongoose');
+const connectDB = require('./config/db.config.js');
 const articleRoutes = require('./routes/Articleroutes');
-const requestLogger = require('./middleware/logger');
-const errorHandler = require('./middleware/errorHandler');
-const Router = require('./routes/Articleroutes');
+const requestLogger = require('./middlewares/logger.js');
+const errorHandler = require('./middlewares/errorHandler.js');
 const cors = require('cors');
 
 
@@ -18,7 +16,7 @@ app.use(requestLogger);
 app.use(errorHandler);
 
 app.use(express.json());
-app.use('/api', Router);
+app.use('/api', articleRoutes);
 
 
 
