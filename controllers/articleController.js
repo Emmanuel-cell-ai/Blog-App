@@ -47,7 +47,7 @@ const updateArticle = async(req, res, next)=> {
     }
 
     try{
-        const updatedArticle = await Article.findByIdAndUpdate(req.params.id, ...value, {new: true})
+        const updatedArticle = await Article.findByIdAndUpdate(req.params.id, value, {new: true})
         if(!updatedArticle){
             return res.status(404).json({error: 'Article not found'})
         }
@@ -71,10 +71,25 @@ const deleteArticle = async (req, res, next) => {
     }
 }
 
+const searchArticles = async (req, res, next) => {
+    try{ 
+        const articles = await Article.find({
+        $text: { $search: req.query.q }
+    })
+    
+        return res.status(200).json({articles})
+    }
+    catch(err){
+        next(err)
+    }
+   
+}
+
 module.exports = {
     PostArticle,
     getArticles,        
     getArticleById,
     updateArticle,
-    deleteArticle
+    deleteArticle,
+    searchArticles
 }

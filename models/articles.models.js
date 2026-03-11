@@ -7,6 +7,8 @@ const ArticleSchema = new mongoose.Schema({
      
 }, {timestamps: true});
 
+ArticleSchema.index({title: 'text', content: 'text'});
+
 const Article =  mongoose.model('Article', ArticleSchema);
 
 

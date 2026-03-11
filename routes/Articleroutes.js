@@ -6,12 +6,14 @@ const {
     getArticles, 
     getArticleById, 
     updateArticle, 
-    deleteArticle} = require('../controllers/articleCOntroller');
+    deleteArticle,
+    searchArticles} = require('../controllers/articleCOntroller');
 
 
 router.get('/', getArticles);
 router.post('/article', PostArticle);
 router.get('/article/:id', getArticleById);
+router.get('/search', searchArticles);
 router.put('/article/:id', updateArticle);
 router.delete('/article/:id', deleteArticle);
 
