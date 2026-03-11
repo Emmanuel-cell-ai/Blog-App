@@ -6,7 +6,7 @@ const {
     getArticles, 
     getArticleById, 
     updateArticle, 
-    deleteArticle} = require('../controllers/articleController.js');
+    deleteArticle} = require('../controllers/articleCOntroller');
 
 
 router.get('/', getArticles);

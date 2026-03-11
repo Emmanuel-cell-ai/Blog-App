@@ -1,5 +1,6 @@
-const Article = require('../models/models.js');
+const Article = require('../models/articles.models.js');
 const {articleSchema, editArticleSchema} = require('../validations/articles.validation.js');
+
 
 const PostArticle = async (req, res, next) => {
     const {error, value} = articleSchema.validate(req.body);
@@ -8,11 +9,9 @@ const PostArticle = async (req, res, next) => {
     }
 
     try{
-        const newArticle = new Article({value})
+        const newArticle = new Article(value)
         await newArticle.save()
-        return res.status(201).json({message: 'Articlae posted successfully', 
-            article: newArticle,
-        })
+        return res.status(201).json({message: 'Article posted successfully', data: newArticle})
     }catch(err){
         return res.status(500).json({error: 'Failed to create article'})
     }
