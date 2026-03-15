@@ -1,9 +1,10 @@
 const User = require("../models/user.models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { registerSchema, loginSchema } = require("../validations/user.validation");
 
 const registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password } = registerSchema.validate(req.body);
 
     if (!username || !email || !password){
         return res.status(400).json({ message: "All fields are required" });
@@ -27,22 +28,27 @@ const registerUser = async (req, res) => {
 }
 
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    try{
+        const { email, password } = loginSchema.validate(req.body);
 
-    if (!email || !password){
-        return res.status(400).json({ message: "All fields are required" });
-    }
-    const user = await User.findOne({ email: email });
-    if (!user){
-        return res.status(400).json({ message: "Invalid credentials" });
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch){
-        return res.status(400).json({ message: "Invalid credentials" });
+        if (!email || !password){
+            return res.status(400).json({ message: "All fields are required" });
+        }
+        const user = await User.findOne({ email: email });
+        if (!user){
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch){
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.status(200).json({ message: "Login successful", token: token });
+    }catch(err){ 
+        res.status(500).json({ message: "Server error" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ message: "Login successful", token: token });
 }
 
 module.exports = {

@@ -4,6 +4,7 @@ const app = express();
 
 const connectDB = require('./config/db.config.js');
 const articleRoutes = require('./routes/Articleroutes.js');
+const userRoutes = require('./routes/userRoutes.js');
 const authRoutes = require('./routes/userRoutes.js');
 const requestLogger = require('./middlewares/logger.js');
 const errorHandler = require('./middlewares/errorHandler.js');
@@ -17,6 +18,7 @@ app.use(requestLogger);
 
 app.use(express.json());
 app.use('/api', articleRoutes);
+app.use('/api', userRoutes)
 app.use('/api/auth', authRoutes);
 
 
