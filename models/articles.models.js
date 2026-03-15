@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const ArticleSchema = new mongoose.Schema({
     title: {type: String, required: true, minlength: 5},
     content: {type: String, required: true, minlength: 20},
-    author: {type: String, minlength: 3, default: 'Guest'},
+    author: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, default: null},
      
 }, {timestamps: true});
 

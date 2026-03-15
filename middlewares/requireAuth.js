@@ -5,14 +5,17 @@ const requireAuth = (req, res, next) => {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
-    const token  = authHeader.split('')[1];
+    const token = authHeader.split(' ')[1];
 
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
+        const userId = decoded && (decoded._id || decoded.id);
+        req.user = userId ? { ...decoded, _id: userId } : decoded;
         next();
 
     }catch (error){
         return res.status(401).json({ message: 'Unauthorized' });
     }
 }
+
+module.exports = requireAuth;

@@ -7,14 +7,15 @@ const {
     getArticleById, 
     updateArticle, 
     deleteArticle,
-    searchArticles} = require('../controllers/articleCOntroller');
+    searchArticles} = require('../controllers/articleController');
+const  requireAuth  = require('../middlewares/requireAuth.js');
 
 
-router.get('/', getArticles);
-router.post('/article', PostArticle);
-router.get('/article/:id', getArticleById);
-router.get('/search', searchArticles);
-router.put('/article/:id', updateArticle);
-router.delete('/article/:id', deleteArticle);
+router.get('/', requireAuth, getArticles);
+router.post('/article', requireAuth, PostArticle);
+router.get('/article/:id', requireAuth, getArticleById);
+router.get('/search', requireAuth, searchArticles);
+router.put('/article/:id', requireAuth, updateArticle);
+router.delete('/article/:id', requireAuth, deleteArticle);
 
 module.exports = router;
