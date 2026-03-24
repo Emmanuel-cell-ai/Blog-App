@@ -46,6 +46,9 @@ const getArticleById = async (req, res, next) => {
 }
 
 const updateArticle = async(req, res, next)=> {
+    const postId = req.params.id;
+    const userId = req._id
+
     const {error, value} = editArticleSchema.validate(req.body);
     if (error){
         return res.status(400).json({error: error.details[0].message})
@@ -55,6 +58,9 @@ const updateArticle = async(req, res, next)=> {
         const updatedArticle = await Article.findByIdAndUpdate(req.params.id, value, {new: true})
         if(!updatedArticle){
             return res.status(404).json({error: 'Article not found'})
+        }
+        if (Article._id.toString() != userId){
+            return res.status(403).json({error: "Not authorized to update this post"})
         }
         await updatedArticle.populate('author', 'username email _id');
 
@@ -67,12 +73,20 @@ const updateArticle = async(req, res, next)=> {
 }
 
 const deleteArticle = async (req, res, next) => {
+    const postId = req.params.id
+    const userId = req._id
+
     try{ 
-        const deletedArticle = await Article.findByIdAndDelete(req.params.id);
+        const deletedArticle = await Article.findByIdAndDelete(postId);
         if (!deletedArticle){
             return res.status(404).json({error: 'Article not found'})
         }
+        if (Article._id.toString() != userId){
+            return res.status(403).json({error: "Not authorized to delete this post"})
+        }
         await deletedArticle.populate('author', 'username email _id');
+
+        
         return res.status(200).json({message: ' Article deleted successfully'})
     }catch(err){
         next(err)
