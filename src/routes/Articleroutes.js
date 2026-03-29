@@ -7,7 +7,7 @@ const {
     getArticleById, 
     updateArticle, 
     deleteArticle,
-    searchArticles} = require('../controllers/articleController');
+    searchArticles} = require('../controllers/articleController.js');   
 const  requireAuth  = require('../middlewares/requireAuth.js');
 
 
