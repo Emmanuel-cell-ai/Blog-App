@@ -3,6 +3,30 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { registerSchema, loginSchema } = require("../validations/user.validation");
 
+
+const cloudinary = require('../config/cloudinary.config.js');
+const {uploadImage} = require('../service/uploadImage.js');
+
+
+const uploadCloudinaryImage = async (req, res, next) => {
+    try{
+        const file = req.file;
+        const result = await uploadCloudinaryImage(file.buffer);
+        const user = await User.findById(req.user._id);
+
+        user.profileImage = result.secure_url;
+        await user.save();
+
+        res.status(200).json({message: "Image Uploaded Successfully",
+            imageUrl: result.secure_url
+        })
+    }catch(err){
+        next(err);
+    }
+
+
+}
+
 const registerUser = async (req, res) => {
     const { error, value } = registerSchema.validate(req.body);
     if (error) {
